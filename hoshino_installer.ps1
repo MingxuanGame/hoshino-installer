@@ -82,7 +82,7 @@ if ($source_cn) {
     # 中国大陆下载源
     $python38 = 'https://mirrors.huaweicloud.com/python/3.8.6/python-3.8.6-amd64.exe'
     $git = 'https://mirrors.huaweicloud.com/git-for-windows/v2.29.2.windows.1/Git-2.29.2-64-bit.exe'
-    $gocqhttp = 'https://download.fastgit.org/Mrs4s/go-cqhttp/releases/download/v0.9.29-fix2/go-cqhttp-v0.9.29-fix2-windows-amd64.zip'
+    $gocqhttp = 'https://download.fastgit.org/Mrs4s/go-cqhttp/releases/download/v1.0.0-beta8-fix2/go-cqhttp_windows_amd64.zip'
     $hoshinobotgit = 'https://hub.fastgit.org/Ice-Cirno/HoshinoBot.git'
     $pypi = 'http://mirrors.aliyun.com/pypi/simple/'
 }
@@ -90,7 +90,7 @@ else {
     # 国际下载源
     $python38 = 'https://www.python.org/ftp/python/3.8.6/python-3.8.6-amd64.exe'
     $git = 'https://github.com/git-for-windows/git/releases/download/v2.29.2.windows.1/Git-2.29.2-64-bit.exe'
-    $gocqhttp = 'https://github.com/Mrs4s/go-cqhttp/releases/download/v0.9.29-fix2/go-cqhttp-v0.9.29-fix2-windows-amd64.zip'
+    $gocqhttp = 'https://github.com/Mrs4s/go-cqhttp/releases/download/v1.0.0-beta8-fix2/go-cqhttp_windows_amd64.zip'
     $hoshinobotgit = 'https://github.com/Ice-Cirno/HoshinoBot.git'
     $pypi = 'https://pypi.org/simple/'
 }
@@ -136,41 +136,53 @@ $token = -join ((65..90) + (97..122) | Get-Random -Count 16 | ForEach-Object { [
 # 写入 gocqhttp 配置文件
 $realpassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($qqpassword))
 New-Item -Path .\mirai\config.json -ItemType File -Value @"
-{
-    "uin": ${qqid},
-    "password": "${realpassword}",
-    "encrypt_password": false,
-    "enable_db": false,
-    "access_token": "${token}",
-    "relogin": {
-        "enabled": false
-    },
-    "_rate_limit": {
-        "enabled": false
-    },
-    "ignore_invalid_cqcode": false,
-    "force_fragmented": false,
-    "heartbeat_interval": 0,
-    "http_config": {
-        "enabled": false
-    },
-    "ws_config": {
-        "enabled": false
-    },
-    "ws_reverse_servers": [
-        {
-            "enabled": true,
-            "reverse_url": "ws://127.0.0.1:8080/ws",
-            "reverse_reconnect_interval": 3000
-        }
-    ],
-    "post_message_format": "string",
-    "debug": false,
-    "log_level": "",
-    "web_ui": {
-        "enabled": false
-    }
-}
+account:
+  uin: ${qqid}
+  password: '${qqpassword}'
+  encrypt: false
+  status: 0      # 在线状态 请参考 https://docs.go-cqhttp.org/guide/config.html#在线状态
+  relogin:
+    delay: 3
+    interval: 3
+    max-times: 0
+  use-sso-address: true
+heartbeat:
+  interval: 5
+message:
+  post-format: string
+  ignore-invalid-cqcode: false
+  force-fragment: false
+  fix-url: false
+  proxy-rewrite: ''
+  report-self-message: false
+  remove-reply-at: false
+  extra-reply-data: false
+  skip-mime-scan: false
+output:
+  log-level: warn
+  log-aging: 15
+  log-force-new: true
+  log-colorful: true
+  debug: false
+default-middlewares: &default
+  access-token: '${access_token}'
+  filter: ''
+  rate-limit:
+    enabled: false
+    frequency: 1
+    bucket: 1
+database:
+  leveldb:
+    enable: true
+  cache:
+    image: data/image.db
+    video: data/video.db
+servers:
+  - ws-reverse:
+      universal: ws://hoshino:8080/ws/
+      reconnect-interval: 3000
+      middlewares:
+        <<: *default
 "@
 
 # 写入 HoshinoBot 配置文件

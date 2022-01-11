@@ -43,7 +43,7 @@ fi
 access_token="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
 
 docker pull pcrbot/hoshinobot
-docker pull pcrbot/gocqhttp:0.9.29-fix2
+docker pull pcrbot/gocqhttp:1.0.0-beta8-fix2
 docker pull yobot/yobot:pypy
 
 docker network create qqbot || true
@@ -56,51 +56,54 @@ echo "ACCESS_TOKEN = '${access_token}'">>Hoshino/hoshino/config/__bot__.py
 
 
 echo "
-{
-  \"uin\": ${qqid},
-  \"password\": \"${qqpassword}\",
-  \"encrypt_password\": false,
-  \"password_encrypted\": \"\",
-  \"enable_db\": false,
-  \"access_token\": \"${access_token}\",
-  \"relogin\": {
-    \"enabled\": true,
-    \"relogin_delay\": 3,
-    \"max_relogin_times\": 0
-  },
-  \"_rate_limit\": {
-    \"enabled\": false,
-    \"frequency\": 1,
-    \"bucket_size\": 1
-  },
-  \"post_message_format\": \"string\",
-  \"ignore_invalid_cqcode\": false,
-  \"force_fragmented\": true,
-  \"heartbeat_interval\": 5,
-  \"use_sso_address\": false,
-  \"http_config\": {
-    \"enabled\": false
-  },
-  \"ws_config\": {
-    \"enabled\": false
-  },
-  \"ws_reverse_servers\": [
-    {
-      \"enabled\": true,
-      \"reverse_url\": \"ws://hoshino:8080/ws/\",
-      \"reverse_reconnect_interval\": 3000
-    },
-    {
-      \"enabled\": true,
-      \"reverse_url\": \"ws://yobot:9222/ws/\",
-      \"reverse_reconnect_interval\": 3000
-    }
-  ],
-  \"web_ui\": {
-    \"enabled\": false
-  }
-}
-">gocqhttp_data/config.json
+account:
+  uin: ${qqid}
+  password: '${qqpassword}'
+  encrypt: false
+  status: 0      # 在线状态 请参考 https://docs.go-cqhttp.org/guide/config.html#在线状态
+  relogin:
+    delay: 3
+    interval: 3
+    max-times: 0
+  use-sso-address: true
+heartbeat:
+  interval: 5
+message:
+  post-format: string
+  ignore-invalid-cqcode: false
+  force-fragment: false
+  fix-url: false
+  proxy-rewrite: ''
+  report-self-message: false
+  remove-reply-at: false
+  extra-reply-data: false
+  skip-mime-scan: false
+output:
+  log-level: warn
+  log-aging: 15
+  log-force-new: true
+  log-colorful: true
+  debug: false
+default-middlewares: &default
+  access-token: '${access_token}'
+  filter: ''
+  rate-limit:
+    enabled: false
+    frequency: 1
+    bucket: 1
+database:
+  leveldb:
+    enable: true
+  cache:
+    image: data/image.db
+    video: data/video.db
+servers:
+  - ws-reverse:
+      universal: ws://hoshino:8080/ws/
+      reconnect-interval: 3000
+      middlewares:
+        <<: *default
+">gocqhttp_data/config.yml
 
 echo "starting hoshinobot"
 docker run -d \
@@ -124,4 +127,4 @@ docker run -it \
            -v ${PWD}/Hoshino:/HoshinoBot \
            --name gocqhttp \
            --network qqbot \
-           pcrbot/gocqhttp:0.9.29-fix2
+           pcrbot/gocqhttp:1.0.0-beta8-fix2
