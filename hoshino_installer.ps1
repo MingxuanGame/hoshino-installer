@@ -135,7 +135,7 @@ $token = -join ((65..90) + (97..122) | Get-Random -Count 16 | ForEach-Object { [
 
 # 写入 gocqhttp 配置文件
 $realpassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($qqpassword))
-New-Item -Path .\mirai\config.json -ItemType File -Value @"
+New-Item -Path .\mirai\config.yml -ItemType File -Value @"
 account:
   uin: ${qqid}
   password: '${qqpassword}'
