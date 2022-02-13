@@ -82,7 +82,7 @@ if ($source_cn) {
     # 中国大陆下载源
     $python38 = 'https://mirrors.huaweicloud.com/python/3.8.6/python-3.8.6-amd64.exe'
     $git = 'https://mirrors.huaweicloud.com/git-for-windows/v2.29.2.windows.1/Git-2.29.2-64-bit.exe'
-    $gocqhttp = 'https://download.fastgit.org/Mrs4s/go-cqhttp/releases/download/v1.0.0-beta8-fix2/go-cqhttp_windows_amd64.zip'
+    $gocqhttp = 'https://download.fastgit.org/Mrs4s/go-cqhttp/releases/download/v1.0.0-rc1/go-cqhttp_windows_amd64.zip'
     $hoshinobotgit = 'https://hub.fastgit.org/Ice-Cirno/HoshinoBot.git'
     $pypi = 'http://mirrors.aliyun.com/pypi/simple/'
 }
@@ -90,7 +90,7 @@ else {
     # 国际下载源
     $python38 = 'https://www.python.org/ftp/python/3.8.6/python-3.8.6-amd64.exe'
     $git = 'https://github.com/git-for-windows/git/releases/download/v2.29.2.windows.1/Git-2.29.2-64-bit.exe'
-    $gocqhttp = 'https://github.com/Mrs4s/go-cqhttp/releases/download/v1.0.0-beta8-fix2/go-cqhttp_windows_amd64.zip'
+    $gocqhttp = 'https://github.com/Mrs4s/go-cqhttp/releases/download/v1.0.0-rc1/go-cqhttp_windows_amd64.zip'
     $hoshinobotgit = 'https://github.com/Ice-Cirno/HoshinoBot.git'
     $pypi = 'https://pypi.org/simple/'
 }
