@@ -165,7 +165,7 @@ output:
   log-colorful: true
   debug: false
 default-middlewares: &default
-  access-token: '${access_token}'
+  access-token: '${token}'
   filter: ''
   rate-limit:
     enabled: false
